@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import styles from './ativosMenu.module.css';
 
 function Dropdown(props) {
@@ -7,7 +8,7 @@ function Dropdown(props) {
       <button className={styles.dropbtn}>{props.type}</button>
       <div className={styles.dropcontent} style={{minWidth:props.width}}>
         <ul>
-          {props.actives.map((act) => <li key={act.id}><a href="link">{act.name}</a></li>)}
+          {props.actives.map((act) => <li key={act.id} onClick={() => props.onDataSend(act.id + " " + act.name)}>{act.name}</li>)}
         </ul>
       </div>
     </div>
@@ -61,14 +62,26 @@ let comms = [
 let none = [];
 
 function Menu() {
+  const [childData, setChildData] = useState('');
+  const [items, setItems] = useState([]);
+  const handleChildData = (data) => {
+    setChildData(data);
+    setItems(prevItems => [...prevItems, data]);
+  };
   return (
+    <>
     <div className={styles.corner}>
-      <Dropdown type="Ações" actives={acoes} width="250px"/>
-      <Dropdown type="FIIs" actives={fiis}/>
-      <Dropdown type="ETFs" actives={etfs}/>
-      <Dropdown type="BDRs" actives={bdrs} width="200px"/>
-      <Dropdown type="Commodities" actives={comms} width="150px"/>
+      <Dropdown type="Ações" actives={acoes} width="250px" onDataSend={handleChildData}/>
+      <Dropdown type="FIIs" actives={fiis} onDataSend={handleChildData}/>
+      <Dropdown type="ETFs" actives={etfs} onDataSend={handleChildData}/>
+      <Dropdown type="BDRs" actives={bdrs} width="200px" onDataSend={handleChildData}/>
+      <Dropdown type="Commodities" actives={comms} width="150px" onDataSend={handleChildData}/>
     </div>
+    <p>Data from Child: {childData}</p>
+    <ul>
+        {items.map((ativo) => <li>{ ativo }</li>)}
+    </ul>
+    </>
   );
 }
 
