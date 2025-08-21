@@ -1,0 +1,38 @@
+[
+  {
+    "label": "2025-08-01",
+    "revenue": [
+      {"VAL": 100000, "name": "VALE3"},
+      {"VAL": 200000, "name": "PETR4"},
+      {"VAL": 150000, "name": "ITUB4"},
+      {"VAL": 100000, "name": "VALE3"} ],
+    "cost": 200
+  },
+  {
+    "label": "2025-08-01",
+    "revenue": [
+      {"VAL": 150000, "name": "VALE3"},
+      {"VAL": 100000, "name": "PETR4"},
+      {"VAL": 180000, "name": "ITUB4"},
+      {"VAL": 100000, "name": "VALE3"} ],
+    "cost": 300
+  },
+  {
+    "label": "2025-08-01",
+    "revenue": [
+      {"VAL": 100000, "name": "VALE3"},
+      {"VAL": 150000, "name": "PETR4"},
+      {"VAL": 120000, "name": "ITUB4"},
+      {"VAL": 100000, "name": "VALE3"} ],
+    "cost": 100
+  },
+  {
+    "label": "2025-08-01",
+    "revenue": [
+      {"VAL": 150000, "name": "VALE3"},
+      {"VAL": 100000, "name": "PETR4"},
+      {"VAL": 190000, "name": "ITUB4"},
+      {"VAL": 100000, "name": "VALE3"} ],
+    "cost": 200
+  }
+]
