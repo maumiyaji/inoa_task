@@ -27,23 +27,33 @@ function Sidebar(props) {
 
   return (
     <div className={styles.sidenav}>
-      <a href="#about">About</a>
-      <DatePicker
-        selected={selectedDateStart}
-        onChange={(date) => {setSelectedDateStart(date);props.onStartDatePick(date)}}
-        minDate={new Date(2025, 7, 1)}
-        maxDate={new Date(2025, 7, 31)}
-      />
-      <DatePicker
-        selected={selectedDateEnd}
-        onChange={(date) => {setSelectedDateEnd(date);props.onEndDatePick(date)}}
-        minDate={new Date(2025, 7, 1)}
-        maxDate={new Date(2025, 7, 31)}
-      />
+      <p>DATA DE INÍCIO</p>
+      <div className={styles.datefield}>
+        <DatePicker
+          showIcon={true}
+          selected={selectedDateStart}
+          onChange={(date) => {setSelectedDateStart(date);props.onStartDatePick(date)}}
+          minDate={new Date(2025, 7, 1)}
+          maxDate={new Date(2025, 7, 31)}
+        />
+      </div>
+      <p>DATA DE TÉRMINO</p>
+      <div className={styles.datefield}>
+        <DatePicker
+          showIcon={true}
+          selected={selectedDateEnd}
+          onChange={(date) => {setSelectedDateEnd(date);props.onEndDatePick(date)}}
+          minDate={new Date(2025, 7, 1)}
+          maxDate={new Date(2025, 7, 31)}
+        />
+      </div>
+      <p>ATIVOS:</p>
       <ul>
         {props.choicesMade.map((ativo) => <li>{ ativo }</li>)}
       </ul>
-      <button onClick={() => props.deletePick()}>Clear</button>
+      <br/>
+      <button onClick={() => props.clickShow()}>Gerar Gráfico</button>
+      <button onClick={() => props.deletePick()}>Limpar</button>
   </div>
   );
 }
@@ -103,11 +113,16 @@ function Main() {
   const handleEndDate = (data) => {
     setEndDate(data.toJSON());
   };
-  const [delMe, setDelMe] = useState('');
-  const [newArray, setNewArray] = useState([]);
+
   const handleDelete = () => {
     setItems([]);
-    // setNewArray(items.filter(item => item !== delMe));
+  }
+
+  const [isVisible, setIsVisible] = useState();
+  const showGraph = () => {
+    if (startDate && endDate && items.length) {
+      setIsVisible(true);
+    }
   }
   
   /* const lineChartData = {
@@ -115,7 +130,7 @@ function Main() {
     datasets: [
       {
         label: items[0],
-        data: chartData.map((data) => data.revenue[numbero].VAL),
+        data: chartData.map((data) => data.revenue[0].VAL),
         tension: .3,
         backgroundColor: "#064FF0",
         borderColor: "#064FF0"
@@ -163,8 +178,10 @@ function Main() {
     };
 
   return (
-    <>
-    <Sidebar onStartDatePick={handleStartDate} onEndDatePick={handleEndDate} choicesMade={items} deletePick={handleDelete}/>
+    <div style={{marginLeft: "300px"}}>
+
+    <Sidebar onStartDatePick={handleStartDate} onEndDatePick={handleEndDate} choicesMade={items} deletePick={handleDelete} clickShow={showGraph}/>
+    
     <div className={styles.corner}>
       <Dropdown type="Ações" actives={acoes} width="250px" onChoice={handleChoice}/>
       <Dropdown type="FIIs" actives={fiis} onChoice={handleChoice}/>
@@ -172,18 +189,20 @@ function Main() {
       <Dropdown type="BDRs" actives={bdrs} width="200px" onChoice={handleChoice}/>
       <Dropdown type="Commodities" actives={comms} width="150px" onChoice={handleChoice}/>
     </div>
+
     <p>{activeChoice}</p> {/* ULTIMA ACTIVE CLICADA*/}
     <p>{Number(activeChoice.slice(0,2))}</p>
     <p>{items.length}</p>
-    <p>{newArray.length}</p>
-    <p>{delMe}</p>
+
     <p>Start Date: {startDate.slice(0,10)}</p>
     <p>End Date: {endDate.slice(0,10)}</p>
+
     <div style={{width: "800px"}}>
-      <Line data={chartData}/>
+      {isVisible && <Line data={chartData}/>}
       <button onClick={addDataset}>Add Dataset</button>
     </div>
-    </>
+
+    </div>
   );
 }
 
