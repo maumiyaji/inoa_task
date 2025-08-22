@@ -14,10 +14,37 @@ function Dropdown(props) {
       <button className={styles.dropbtn}>{props.type}</button>
       <div className={styles.dropcontent} style={{minWidth:props.width}}>
         <ul>
-          {props.actives.map((act) => <li key={act.id} onClick={() => props.onDataSend(act.id + " " + act.name)}>{act.name}</li>)}
+          {props.actives.map((act) => <li key={act.id} onClick={() => props.onChoice(act.id + " " + act.name)}>{act.name}</li>)}
         </ul>
       </div>
     </div>
+  );
+}
+
+function Sidebar(props) {
+  const [selectedDateStart, setSelectedDateStart] = useState(null);
+  const [selectedDateEnd, setSelectedDateEnd] = useState(null);
+
+  return (
+    <div className={styles.sidenav}>
+      <a href="#about">About</a>
+      <DatePicker
+        selected={selectedDateStart}
+        onChange={(date) => {setSelectedDateStart(date);props.onStartDatePick(date)}}
+        minDate={new Date(2025, 7, 1)}
+        maxDate={new Date(2025, 7, 31)}
+      />
+      <DatePicker
+        selected={selectedDateEnd}
+        onChange={(date) => {setSelectedDateEnd(date);props.onEndDatePick(date)}}
+        minDate={new Date(2025, 7, 1)}
+        maxDate={new Date(2025, 7, 31)}
+      />
+      <ul>
+        {props.choicesMade.map((ativo) => <li>{ ativo }</li>)}
+      </ul>
+      <button onClick={() => props.deletePick()}>Clear</button>
+  </div>
   );
 }
 
@@ -56,54 +83,60 @@ let comms = [
   {id: 24, name: 'SFI (Soja)'},
   {id: 25, name: 'SB (Açúcar)'},
 ];
-let none = [];
-
-function TesteData(props) {
-  return (
-    <>
-    {props.datachoice && (
-        <p>Data selecionada de {props.type}: {props.datachoice.toJSON()}</p>
-    )}
-    </>
-  );
-}
 
 function Main() {
-  const [childData, setChildData] = useState('');
+  // TRAZENDO A ACTIVE ESCOLHIDA & MONTANDO UMA ARRAY
+  const [activeChoice, setChoice] = useState('');
   const [items, setItems] = useState([]);
-  const handleChildData = (data) => {
-    setChildData(data);
-    setItems(prevItems => [...prevItems, data]);
+  const handleChoice = (data) => {
+    setChoice(data);
+    if (!items.includes(data)) {
+      setItems(prevItems => [...prevItems, data]);
+    }
   };
-  const [selectedDateStart, setSelectedDateStart] = useState(null);
-  const [selectedDateEnd, setSelectedDateEnd] = useState(null);
-  const numbero = 0;
+  // TRAZENDO AS DATAS SELECIONADAS NO SIDEBAR
+  const [startDate, setStartDate] = useState('');
+  const handleStartDate = (data) => {
+    setStartDate(data.toJSON());
+  };
+  const [endDate, setEndDate] = useState('');
+  const handleEndDate = (data) => {
+    setEndDate(data.toJSON());
+  };
+  const [delMe, setDelMe] = useState('');
+  const [newArray, setNewArray] = useState([]);
+  const handleDelete = () => {
+    setItems([]);
+    // setNewArray(items.filter(item => item !== delMe));
+  }
+  
   /* const lineChartData = {
-          labels: chartData.map((data) => data.label),
-          datasets: [
-            {
-              label: items[0],
-              data: chartData.map((data) => data.revenue[numbero].VAL),
-              tension: .3,
-              backgroundColor: "#064FF0",
-              borderColor: "#064FF0"
-            },
-            {
-              label: items[1],
-              data: chartData.map((data) => data.revenue[1].VAL),
-              tension: .3,
-              backgroundColor: "#06AFF0",
-              borderColor: "#06AFF0"
-            },
-            {
-              label: items[2],
-              data: chartData.map((data) => data.revenue[2].VAL),
-              tension: .3,
-              backgroundColor: "#b80000",
-              borderColor: "#b80000"
-            },
-          ]
-        }; */
+    labels: chartData.map((data) => data.label),
+    datasets: [
+      {
+        label: items[0],
+        data: chartData.map((data) => data.revenue[numbero].VAL),
+        tension: .3,
+        backgroundColor: "#064FF0",
+        borderColor: "#064FF0"
+      },
+      {
+        label: items[1],
+        data: chartData.map((data) => data.revenue[1].VAL),
+        tension: .3,
+        backgroundColor: "#06AFF0",
+        borderColor: "#06AFF0"
+      },
+      {
+        label: items[2],
+        data: chartData.map((data) => data.revenue[2].VAL),
+        tension: .3,
+        backgroundColor: "#b80000",
+        borderColor: "#b80000"
+      },
+    ]
+  }; */
+
   const [chartData, setChartData] = useState({
         labels: ['Jan', 'Feb', 'Mar', 'Apr'],
         datasets: [
@@ -131,37 +164,25 @@ function Main() {
 
   return (
     <>
+    <Sidebar onStartDatePick={handleStartDate} onEndDatePick={handleEndDate} choicesMade={items} deletePick={handleDelete}/>
     <div className={styles.corner}>
-      <Dropdown type="Ações" actives={acoes} width="250px" onDataSend={handleChildData}/>
-      <Dropdown type="FIIs" actives={fiis} onDataSend={handleChildData}/>
-      <Dropdown type="ETFs" actives={etfs} onDataSend={handleChildData}/>
-      <Dropdown type="BDRs" actives={bdrs} width="200px" onDataSend={handleChildData}/>
-      <Dropdown type="Commodities" actives={comms} width="150px" onDataSend={handleChildData}/>
+      <Dropdown type="Ações" actives={acoes} width="250px" onChoice={handleChoice}/>
+      <Dropdown type="FIIs" actives={fiis} onChoice={handleChoice}/>
+      <Dropdown type="ETFs" actives={etfs} onChoice={handleChoice}/>
+      <Dropdown type="BDRs" actives={bdrs} width="200px" onChoice={handleChoice}/>
+      <Dropdown type="Commodities" actives={comms} width="150px" onChoice={handleChoice}/>
     </div>
-    <p>Ativos 1: {items[0]}</p>
-    <p>Ativos 2: {items[1]}</p>
-    <p>Ativos 3: {items[2]}</p>
-    {/* <ul>
-        {items.map((ativo) => <li>{ ativo }</li>)}
-    </ul> */}
-      <DatePicker
-          selected={selectedDateStart}
-          onChange={(date) => setSelectedDateStart(date)}
-          minDate={new Date(2025, 7, 1)}
-          maxDate={new Date(2025, 7, 31)}
-      />
-      <DatePicker
-          selected={selectedDateEnd}
-          onChange={(date) => setSelectedDateEnd(date)}
-          minDate={new Date(2025, 7, 1)}
-          maxDate={new Date(2025, 7, 31)}
-      />
-      <TesteData type="Início" datachoice={selectedDateStart}/>
-      <TesteData type="Fim" datachoice={selectedDateEnd}/>
-      <div style={{width: "800px"}}>
-        <Line data={chartData}/>
-        <button onClick={addDataset}>Add Dataset</button>
-      </div>
+    <p>{activeChoice}</p> {/* ULTIMA ACTIVE CLICADA*/}
+    <p>{Number(activeChoice.slice(0,2))}</p>
+    <p>{items.length}</p>
+    <p>{newArray.length}</p>
+    <p>{delMe}</p>
+    <p>Start Date: {startDate.slice(0,10)}</p>
+    <p>End Date: {endDate.slice(0,10)}</p>
+    <div style={{width: "800px"}}>
+      <Line data={chartData}/>
+      <button onClick={addDataset}>Add Dataset</button>
+    </div>
     </>
   );
 }

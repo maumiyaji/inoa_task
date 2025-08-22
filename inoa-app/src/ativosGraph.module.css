@@ -1,7 +1,7 @@
 /* Style The Dropdown Button */
 .dropbtn {
   background-color: #4CAF50;
-  width: 160px;
+  width: 150px;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -10,7 +10,7 @@
 }
 
 .corner {
-  width: 800px;
+  width: 750px;
   background-color: #4CAF50;
   padding-left: 30px;
   padding-right: 30px;
@@ -62,4 +62,48 @@ li:hover {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #2196F3;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #064579;
+}
+
+.sidenav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #111;
+}
+
+.sidenav li {
+  display: block;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.sidenav li:hover {
+  background-color: #ff0000;
+  color: white;
+  cursor: pointer;
 }
