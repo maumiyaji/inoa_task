@@ -11,7 +11,7 @@ import DadosTabela from "./data/chartData.json"
 import styles from './ativosGraph.module.css';
 import logo from './img/logo-white.png';
 
-function Welcome() {
+function Welcome() { // TEXTO INICIAL
   return (
     <div className={styles.welcome}>
       <p>Olá! Para consultar os ativos:</p>
@@ -24,7 +24,7 @@ function Welcome() {
   );
 }
 
-function Dropdown(props) {
+function Dropdown(props) { // MENUS DE ATIVOS
   return (
     <div className={styles.dropdown}>
       <button className={styles.dropbtn}>{props.type}</button>
@@ -37,7 +37,7 @@ function Dropdown(props) {
   );
 }
 
-function Sidebar(props) {
+function Sidebar(props) { // MENU LATERAL
   const [selectedDateStart, setSelectedDateStart] = useState(null);
   const [selectedDateEnd, setSelectedDateEnd] = useState(null);
 
@@ -72,6 +72,7 @@ function Sidebar(props) {
   );
 }
 
+// AMOSTRAS DE ATIVOS-EXEMPLO
 let acoes = [
     {id: 1, name: 'VALE3 (Vale)'},
     {id: 2, name: 'PETR4 (Petrobras)'},
@@ -112,7 +113,7 @@ function Main() {
   // TRAZENDO A ACTIVE ESCOLHIDA & MONTANDO UMA ARRAY
   const [items, setItems] = useState([]);
   const handleChoice = (data) => {
-    if (!items.includes(data) && startDate && endDate) {
+    if (!items.includes(data) && startDate && endDate) { // EVITANDO A REPETIÇAO
       setItems(prevItems => [...prevItems, data]);
       addDataset(data); // PASSANDO O NOME DO ATIVO PARA MONTAR O CHART
     };
@@ -125,6 +126,8 @@ function Main() {
   const [indexStartDate, setIndexStartDate] = useState();
   const handleStartDate = (data) => {
     setStartDate(data.toJSON().slice(0,10));
+    //FUNÇAO PARA CRIAR OS INDEXES
+    //NAO CONSEGUI, UTILIZANDO O SPLICE()...
     setIndexStartDate(Number(data.toJSON().slice(8,10))-1);
     clearGraph(); handleDelete();
   };
@@ -142,13 +145,12 @@ function Main() {
   // EXIBINDO O GRAFICO (FIRST TIME)
   const [isVisible, setIsVisible] = useState();
 
+  // GERANDO CORES ALEATORIAS EM HEX
   const [newColor, setNewColor] = useState();
   const getRandomColor = () => {
-    // Generate a random integer between 0 and 16777215 (0xFFFFFF)
     const randomNumber = Math.floor(Math.random() * 0xFFFFFF);
-    // Convert the number to a hexadecimal string and pad with leading zeros if necessary
     const hexColor = randomNumber.toString(16).padStart(6, '0');
-    setNewColor(`#${hexColor.toUpperCase()}`); // Returns the color in #RRGGBB format
+    setNewColor(`#${hexColor.toUpperCase()}`);
   }
   // MONTANDO O GRAFICO
   const [chartData, setChartData] = useState({
@@ -198,7 +200,7 @@ function Main() {
     {isVisible && <button className={styles.clear} onClick={() => { //BOTAO PARA LIMPAR O GRAFICO (ESVAZIA A ARRAY DE ATIVOS)
       handleDelete(),clearGraph()}}>Clique aqui para limpar o gráfico e escolher novos ativos</button>}
     </div>
-    <br />
+    <br/>
     <div style={{width: "800px"}}>
       {isVisible && <Line data={chartData}/>}
     </div>
