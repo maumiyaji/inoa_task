@@ -1,6 +1,39 @@
-/* Style The Dropdown Button */
+body {
+  background-image: url("./img/mountains.png");
+}
+/* WELCOME TEXT */
+.welcome {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  width: 760px;
+  padding: 10px 20px;
+  border: 2px solid #005984;
+  border-radius: 5px;
+}
+.welcome ul {
+  list-style-type: decimal;
+}
+.clear {
+  background-color: #e4e4e4;
+  border: none;
+  color: black;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+}
+.clear:hover {
+  background-color: #363636;
+  color: #fff;
+}
+
+/* MENU DE ATIVOS*/
 .dropbtn {
-  background-color: #4CAF50;
+  background-color: #1b75a5;
   width: 150px;
   color: white;
   padding: 16px;
@@ -8,62 +41,49 @@
   border: none;
   cursor: pointer;
 }
-
 .corner {
   width: 750px;
-  background-color: #4CAF50;
+  background-color: #1b75a5;
   padding-left: 30px;
   padding-right: 30px;
   border-radius: 30px;
 }
-
-/* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
   display: inline-block;
 }
-
-/* Dropdown Content (Hidden by Default) */
 .dropcontent {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: #f0f0f0;
   min-width: 300px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
   z-index: 1;
 }
-
-ul {
+.dropcontent ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  background-color: #f1f1f1;
 }
-
-li {
+.dropcontent li {
   display: block;
   color: #000;
   padding: 8px 16px;
   text-decoration: none;
 }
-
-/* Change the link color on hover */
-li:hover {
-  background-color: #555;
+.dropcontent li:hover {
+  background-color: #005984;
   color: white;
   cursor: pointer;
 }
-
-/* Show the dropdown menu on hover */
 .dropdown:hover .dropcontent {
   display: block;
 }
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-  background-color: #3e8e41;
+  background-color: #005984;
 }
 
+/* MENU LATERAL */
 .sidenav {
   height: 100%;
   width: 270px;
@@ -71,40 +91,37 @@ li:hover {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  color: #fff;
+  background-color: #00273b;
+  font-family: 'Arial', sans-serif;
   overflow-x: hidden;
   padding-top: 20px;
 }
-
 .sidenav p {
-  padding: 6px 8px 6px 16px;
-  font-size: 25px;
+  padding: 30px 0 0 30px;
+  font-size: 22px;
+  line-height: 10%;
   color: #ffffff;
   display: block;
 }
-
-.sidenav ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  background-color: #111;
-}
-
-.sidenav li {
-  display: block;
-  color: #ffffff;
-  padding: 8px 16px;
-  text-decoration: none;
-}
-
-.sidenav li:hover {
-  background-color: #ff0000;
-  color: white;
-  cursor: pointer;
-}
-
 .datefield {
   position: relative;
   display: block;
   margin-left: 30px;
 }
+.sidenav ul {
+  list-style-type: none;
+  margin-left: 30px;
+  padding: 0;
+}
+.sidenav li {
+  display: block;
+  color: #ffffff;
+  padding: 8px 0;
+  text-decoration: none;
+}
+.sidenav li:hover {
+  background-color: #00273b;
+  color: white;
+  cursor: none;
+} 

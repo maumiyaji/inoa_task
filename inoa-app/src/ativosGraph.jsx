@@ -9,6 +9,20 @@ import { Line } from 'react-chartjs-2';
 import DadosTabela from "./data/chartData.json"
 
 import styles from './ativosGraph.module.css';
+import logo from './img/logo-white.png';
+
+function Welcome() {
+  return (
+    <div className={styles.welcome}>
+      <p>Olá! Para consultar os ativos:</p>
+        <ul>
+          <li>Selecione as datas de início e fim do período, na barra lateral;</li>
+          <li>Escolha os ativos no menu superior.</li>
+        </ul>
+      <p>Obs.: Ao definir um novo período, será preciso escolher novamente os ativos.</p>
+    </div>
+  );
+}
 
 function Dropdown(props) {
   return (
@@ -29,6 +43,7 @@ function Sidebar(props) {
 
   return (
     <div className={styles.sidenav}>
+      <img src={logo}  style={{marginLeft: "30px"}}/>
       <p>DATA DE INÍCIO</p>
       <div className={styles.datefield}>
         <DatePicker
@@ -51,7 +66,7 @@ function Sidebar(props) {
       </div>
       <p>ATIVOS:</p>
       <ul>
-        {props.choicesMade.map((ativo) => <li key={ativo.id}>{ ativo }</li>)}
+        {props.choicesMade.map((ativo) => <li key={ativo.id}>{ ativo.slice(2) }</li>)}
       </ul>
   </div>
   );
@@ -146,7 +161,6 @@ function Main() {
       const newDataset = {
         label: data.slice(2),
         data: newRangeDataset.map((valor) => valor.values[Number(data.slice(0,2)) - 1].val),
-        tension: .2,
         borderColor: newColor,
         backgroundColor: newColor,
       };
@@ -176,9 +190,15 @@ function Main() {
       <Dropdown type="Commodities" actives={comms} width="150px" onChoice={handleChoice}/>
     </div>
     <br/>
-    <button onClick={() => { //BOTAO PARA LIMPAR O GRAFICO (ESVAZIA A ARRAY DE ATIVOS)
-      handleDelete(),clearGraph()}}>Limpar</button>
-
+    <div>
+      {!isVisible && <Welcome/>}
+    </div>
+    
+    <div>
+    {isVisible && <button className={styles.clear} onClick={() => { //BOTAO PARA LIMPAR O GRAFICO (ESVAZIA A ARRAY DE ATIVOS)
+      handleDelete(),clearGraph()}}>Clique aqui para limpar o gráfico e escolher novos ativos</button>}
+    </div>
+    <br />
     <div style={{width: "800px"}}>
       {isVisible && <Line data={chartData}/>}
     </div>
