@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import styles from './ativosGraph.module.css';
 
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
-import chartData from "./data/chartData.json"
+
+import DadosTabela from "./data/chartData.json"
+
+import styles from './ativosGraph.module.css';
 
 function Dropdown(props) {
   return (
@@ -49,11 +51,8 @@ function Sidebar(props) {
       </div>
       <p>ATIVOS:</p>
       <ul>
-        {props.choicesMade.map((ativo) => <li>{ ativo }</li>)}
+        {props.choicesMade.map((ativo) => <li key={ativo.id}>{ ativo }</li>)}
       </ul>
-      <br/>
-      <button onClick={() => props.clickShow()}>Gerar Gráfico</button>
-      <button onClick={() => props.deletePick()}>Limpar</button>
   </div>
   );
 }
@@ -96,91 +95,78 @@ let comms = [
 
 function Main() {
   // TRAZENDO A ACTIVE ESCOLHIDA & MONTANDO UMA ARRAY
-  const [activeChoice, setChoice] = useState('');
   const [items, setItems] = useState([]);
   const handleChoice = (data) => {
-    setChoice(data);
-    if (!items.includes(data)) {
+    if (!items.includes(data) && startDate && endDate) {
       setItems(prevItems => [...prevItems, data]);
+      addDataset(data); // PASSANDO O NOME DO ATIVO PARA MONTAR O CHART
+    };
+    if (startDate && endDate) {
+      setIsVisible(true);
     }
   };
   // TRAZENDO AS DATAS SELECIONADAS NO SIDEBAR
   const [startDate, setStartDate] = useState('');
+  const [indexStartDate, setIndexStartDate] = useState();
   const handleStartDate = (data) => {
-    setStartDate(data.toJSON());
+    setStartDate(data.toJSON().slice(0,10));
+    setIndexStartDate(Number(data.toJSON().slice(8,10))-1);
+    clearGraph(); handleDelete();
   };
   const [endDate, setEndDate] = useState('');
+  const [indexEndDate, setIndexEndDate] = useState();
   const handleEndDate = (data) => {
-    setEndDate(data.toJSON());
+    setEndDate(data.toJSON().slice(0,10));
+    setIndexEndDate(Number(data.toJSON().slice(8,10))-1);
+    clearGraph(); handleDelete();
   };
-
+  // LIMPANDO AS ESCOLHAS
   const handleDelete = () => {
     setItems([]);
   }
-
+  // EXIBINDO O GRAFICO (FIRST TIME)
   const [isVisible, setIsVisible] = useState();
-  const showGraph = () => {
-    if (startDate && endDate && items.length) {
-      setIsVisible(true);
-    }
+
+  const [newColor, setNewColor] = useState();
+  const getRandomColor = () => {
+    // Generate a random integer between 0 and 16777215 (0xFFFFFF)
+    const randomNumber = Math.floor(Math.random() * 0xFFFFFF);
+    // Convert the number to a hexadecimal string and pad with leading zeros if necessary
+    const hexColor = randomNumber.toString(16).padStart(6, '0');
+    setNewColor(`#${hexColor.toUpperCase()}`); // Returns the color in #RRGGBB format
   }
-  
-  /* const lineChartData = {
-    labels: chartData.map((data) => data.label),
-    datasets: [
-      {
-        label: items[0],
-        data: chartData.map((data) => data.revenue[0].VAL),
-        tension: .3,
-        backgroundColor: "#064FF0",
-        borderColor: "#064FF0"
-      },
-      {
-        label: items[1],
-        data: chartData.map((data) => data.revenue[1].VAL),
-        tension: .3,
-        backgroundColor: "#06AFF0",
-        borderColor: "#06AFF0"
-      },
-      {
-        label: items[2],
-        data: chartData.map((data) => data.revenue[2].VAL),
-        tension: .3,
-        backgroundColor: "#b80000",
-        borderColor: "#b80000"
-      },
-    ]
-  }; */
-
+  // MONTANDO O GRAFICO
   const [chartData, setChartData] = useState({
-        labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-        datasets: [
-          {
-            label: 'Dataset 1',
-            data: [30, 70, 50, 40],
-            borderColor: 'blue',
-            backgroundColor: 'lightblue',
-          },
-        ],
+        labels: [],
+        datasets: [],
       });
-  const addDataset = () => {
+  const addDataset = (data) => {
+      const newRangeDataset = DadosTabela.slice(indexStartDate,indexEndDate+1);
+      getRandomColor();
       const newDataset = {
-        label: `Dataset ${chartData.datasets.length + 1}`,
-        data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100], // Example random data
-        borderColor: 'red', // Customize styling
-        backgroundColor: 'lightcoral',
+        label: data.slice(2),
+        data: newRangeDataset.map((valor) => valor.values[Number(data.slice(0,2)) - 1].val),
+        tension: .2,
+        borderColor: newColor,
+        backgroundColor: newColor,
       };
-
       setChartData((prevData) => ({
-        ...prevData,
+        labels: newRangeDataset.map((valor) => valor.label),
         datasets: [...prevData.datasets, newDataset],
       }));
     };
+  const clearGraph = () => {
+    setChartData({
+        labels: [],
+        datasets: [],
+      });
+    }
 
+  // MAIN
   return (
     <div style={{marginLeft: "300px"}}>
 
-    <Sidebar onStartDatePick={handleStartDate} onEndDatePick={handleEndDate} choicesMade={items} deletePick={handleDelete} clickShow={showGraph}/>
+    <Sidebar onStartDatePick={handleStartDate} onEndDatePick={handleEndDate} choicesMade={items}/>
     
     <div className={styles.corner}>
       <Dropdown type="Ações" actives={acoes} width="250px" onChoice={handleChoice}/>
@@ -189,17 +175,12 @@ function Main() {
       <Dropdown type="BDRs" actives={bdrs} width="200px" onChoice={handleChoice}/>
       <Dropdown type="Commodities" actives={comms} width="150px" onChoice={handleChoice}/>
     </div>
-
-    <p>{activeChoice}</p> {/* ULTIMA ACTIVE CLICADA*/}
-    <p>{Number(activeChoice.slice(0,2))}</p>
-    <p>{items.length}</p>
-
-    <p>Start Date: {startDate.slice(0,10)}</p>
-    <p>End Date: {endDate.slice(0,10)}</p>
+    <br/>
+    <button onClick={() => { //BOTAO PARA LIMPAR O GRAFICO (ESVAZIA A ARRAY DE ATIVOS)
+      handleDelete(),clearGraph()}}>Limpar</button>
 
     <div style={{width: "800px"}}>
       {isVisible && <Line data={chartData}/>}
-      <button onClick={addDataset}>Add Dataset</button>
     </div>
 
     </div>

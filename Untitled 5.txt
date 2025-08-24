@@ -20,11 +20,10 @@ No JSON, para cada ativo: nome (VALE3), cor, key, array com os valores
 -> A função para o gráfico vai buscar a array com o ativos escolhidos e, daí, buscar os dados no json
 
 
---------------- QUANDO CLICAR NO ATIVO, PEGAR AS VARIAVEIS, DISPARAR UMA FUNCAO PARA ADICIONAR NO GRAFICO
+--------------- CRIAR UMA FUNÇÃO PARA ENCONTRAR AS DATAS NO JSON E CRIAR UMA NOVA ARRAY, "SLICEANDO" A PARTE ESCOLHIDA
 
---------------- RESOLVER COMO EVITAR A CRIACAO DO GRAFICO ATE QUE ESCOLHA AS DATAS E 1 ATIVO, PELO MENOS!
+--------------- ENCONTRE O INDEX DE CADA DATA E DEPOIS CRIE O SLICE
 
---------------- COMO CRIAR O PRIMEIRO GRAFICO?
 
 1. Pedir as datas
 2. Pedir os ativos
